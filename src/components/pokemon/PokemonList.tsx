@@ -1,10 +1,13 @@
-import { FixedSizeList as List } from 'react-window';
-import AutoSizer from 'react-virtualized-auto-sizer';
 import PokemonListItem from './PokemonListItem';
 import { usePokemonList } from '../../hooks/usePokemonList';
 
-const PokemonList = () => {
-  const { pokemonList, isLoading, error } = usePokemonList();
+interface PokemonListProps {
+  debouncedSearch?: string;
+}
+
+const PokemonList = ({ debouncedSearch = '' }: PokemonListProps) => {
+  // Pass debouncedSearch to the hook
+  const { pokemonList, isLoading, error } = usePokemonList(debouncedSearch);
 
   if (isLoading) {
     return (
@@ -45,9 +48,9 @@ const PokemonList = () => {
     );
   }
 
-  // Temporary: Remove virtualization to test if it works
+  // Grid layout for tiles
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
       {pokemonList.map((pokemon) => (
         <PokemonListItem key={pokemon.id} pokemon={pokemon} />
       ))}

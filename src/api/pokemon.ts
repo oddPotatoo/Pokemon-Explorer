@@ -137,7 +137,7 @@ export const fetchPokemonByName = async (name: string, signal?: AbortSignal): Pr
   }
 };
 
-// Add a test function to verify API connection
+// Test function to verify API connection
 export const testPokeAPI = async (): Promise<boolean> => {
   try {
     const response = await api.get('/pokemon?limit=1');

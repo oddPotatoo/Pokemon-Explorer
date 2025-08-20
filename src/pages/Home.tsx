@@ -10,8 +10,8 @@ const Home = () => {
   const [searchInput, setSearchInput] = useState(search);
   const debouncedSearch = useDebounce(searchInput, 400);
   
-  // Pass debouncedSearch to the hook
-  const { pokemonList, totalPages, isLoading } = usePokemonList(debouncedSearch);
+  // Pass debouncedSearch to PokemonList
+  const { totalPages, isLoading } = usePokemonList(debouncedSearch);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value);
@@ -36,10 +36,9 @@ const Home = () => {
         onFavoritesOnlyChange={(value) => updateParams({ favorites: value, page: 1 })}
       />
 
-      {/* Pass debouncedSearch to PokemonList if needed, or keep it in context */}
-      <PokemonList />
+      <PokemonList debouncedSearch={debouncedSearch} />
 
-      {!isLoading && pokemonList.length > 0 && (
+      {!isLoading && PokemonList.length > 0 && (
         <div className="flex justify-center gap-2 mt-6">
           <button
             onClick={() => handlePageChange(Math.max(1, page - 1))}

@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { fetchPokemonDetails } from '../../api/pokemon';
 import { useFavorites } from '../../stores/favorites';
@@ -10,6 +10,11 @@ import ErrorMessage from '../common/ErrorMessage';
 const PokemonDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { favorites, toggleFavorite } = useFavorites();
+  const location = useLocation();
+  
+  // Get the page from URL search params or default to 1
+  const searchParams = new URLSearchParams(location.search);
+  const page = searchParams.get('page') || '1';
 
   const { data: pokemon, isLoading, error } = useQuery({
     queryKey: ['pokemon', id],
@@ -121,8 +126,9 @@ const PokemonDetail = () => {
         </div>
       </div>
       <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700">
+        {/* Preserve the page when going back */}
         <Link
-          to="/"
+          to={`/?page=${page}`}
           className="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
         >
           Back to List
