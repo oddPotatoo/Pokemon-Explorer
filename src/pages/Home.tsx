@@ -10,17 +10,29 @@ const Home = () => {
   const [searchInput, setSearchInput] = useState(search);
   const debouncedSearch = useDebounce(searchInput, 400);
   
-  // Pass debouncedSearch to PokemonList
-  const { totalPages, isLoading } = usePokemonList(debouncedSearch);
+  const { pokemonList, totalPages, isLoading } = usePokemonList(debouncedSearch);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchInput(e.target.value);
-    updateParams({ q: e.target.value, page: 1 });
+    const value = e.target.value;
+    setSearchInput(value);
+    updateParams({ q: value, page: 1 });
   };
 
   const handlePageChange = (newPage: number) => {
     updateParams({ page: newPage });
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleSortChange = (newSort: string) => {
+    updateParams({ sort: newSort, page: 1 });
+  };
+
+  const handleTypeFilterChange = (type: string) => {
+    updateParams({ type, page: 1 });
+  };
+
+  const handleFavoritesOnlyChange = (value: boolean) => {
+    updateParams({ favorites: value, page: 1 });
   };
 
   return (
@@ -29,16 +41,16 @@ const Home = () => {
         search={searchInput}
         onSearchChange={handleSearchChange}
         typeFilter={typeFilter}
-        onTypeFilterChange={(type) => updateParams({ type, page: 1 })}
+        onTypeFilterChange={handleTypeFilterChange}
         sort={sort}
-        onSortChange={(sort) => updateParams({ sort })}
+        onSortChange={handleSortChange}
         favoritesOnly={favoritesOnly}
-        onFavoritesOnlyChange={(value) => updateParams({ favorites: value, page: 1 })}
+        onFavoritesOnlyChange={handleFavoritesOnlyChange}
       />
 
       <PokemonList debouncedSearch={debouncedSearch} />
 
-      {!isLoading && PokemonList.length > 0 && (
+      {!isLoading && pokemonList.length > 0 && totalPages > 1 && (
         <div className="flex justify-center gap-2 mt-6">
           <button
             onClick={() => handlePageChange(Math.max(1, page - 1))}

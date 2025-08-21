@@ -9,7 +9,7 @@ const PokemonList = ({ debouncedSearch = '' }: PokemonListProps) => {
   // Pass debouncedSearch to the hook
   const { pokemonList, isLoading, error } = usePokemonList(debouncedSearch);
 
-  if (isLoading) {
+    if (isLoading && !debouncedSearch) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {Array.from({ length: 20 }).map((_, index) => (
@@ -19,6 +19,14 @@ const PokemonList = ({ debouncedSearch = '' }: PokemonListProps) => {
             <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
           </div>
         ))}
+      </div>
+    );
+  }
+
+  if (isLoading && debouncedSearch) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-gray-500 dark:text-gray-400">Searching...</p>
       </div>
     );
   }

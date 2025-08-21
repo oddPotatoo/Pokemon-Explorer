@@ -44,19 +44,22 @@ const PokemonListItem = ({ pokemon }: PokemonListItemProps) => {
               />
             </div>
             <div className="p-4">
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-white capitalize">
+              <h3 className="text-lg font-semibold text-gray-80 dark:text-white capitalize">
                 {pokemon.name}
               </h3>
-              <div className="flex flex-wrap gap-1 mt-2">
-                {pokemon.types.map((type) => (
-                  <span
-                    key={type}
-                    className={`px-2 py-1 text-xs rounded-full bg-${type}-100 dark:bg-${type}-800 text-${type}-800 dark:text-${type}-100`}
-                  >
-                    {type}
-                  </span>
-                ))}
-              </div>
+              {/* Types will be empty in list view due to API limitations */}
+              {pokemon.types.length > 0 && (
+                <div className="flex flex-wrap gap-1 mt-2">
+                  {pokemon.types.map((type) => (
+                    <span
+                      key={type}
+                      className={`px-2 py-1 text-xs rounded-full bg-${type}-100 dark:bg-${type}-800 text-${type}-800 dark:text-${type}-100`}
+                    >
+                      {type}
+                    </span>
+                  ))}
+                </div>
+              )}
               <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
                 #{pokemon.id.toString().padStart(3, '0')}
               </p>

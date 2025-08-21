@@ -64,9 +64,35 @@ export interface PokemonDetails {
   }[];
 }
 
-export const fetchPokemonList = async ({ queryKey, signal }: QueryFunctionContext): Promise<PokemonListResponse> => {
+export interface BasicPokemonInfo {
+  id: number;
+  name: string;
+}
+
+export const fetchAllPokemonNames = async (): Promise<BasicPokemonInfo[]> => {
   try {
-    const [_, { page }] = queryKey as [string, { page: number }];
+    console.log('Fetching all Pokémon names for search...');
+    // Fetch a large number of Pokémon to enable client-side searching
+    const response = await api.get<PokemonListResponse>('/pokemon', {
+      params: { limit: 1000 } // Get first 1000 Pokémon for searching
+    });
+    
+    return response.data.results.map((pokemon, index) => {
+      const id = parseInt(pokemon.url.split('/').slice(-2, -1)[0]);
+      return {
+        id,
+        name: pokemon.name,
+      };
+    });
+  } catch (error) {
+    console.error('Error fetching all Pokémon names:', error);
+    throw new Error('Failed to load Pokémon search data. Please try again.');
+  }
+};
+
+export const fetchPokemonList = async (context: QueryFunctionContext): Promise<PokemonListResponse> => {
+  try {
+    const [_, { page }] = context.queryKey as [string, { page: number }];
     console.log('Fetching Pokémon list, page:', page);
     
     const response = await api.get<PokemonListResponse>('/pokemon', {
@@ -74,7 +100,7 @@ export const fetchPokemonList = async ({ queryKey, signal }: QueryFunctionContex
         offset: (page - 1) * PAGE_SIZE, 
         limit: PAGE_SIZE 
       },
-      signal,
+      signal: context.signal,
     });
     
     console.log('Pokémon list response:', response.data);
@@ -134,6 +160,43 @@ export const fetchPokemonByName = async (name: string, signal?: AbortSignal): Pr
     }
     
     throw new Error('Failed to search Pokémon. Please try again.');
+  }
+};
+
+export interface TypePokemon {
+  pokemon: {
+    name: string;
+    url: string;
+  };
+  slot: number;
+}
+
+export interface TypeResponse {
+  id: number;
+  name: string;
+  pokemon: TypePokemon[];
+}
+
+export const fetchPokemonByType = async (type: string): Promise<BasicPokemonInfo[]> => {
+  try {
+    console.log('Fetching Pokémon by type:', type);
+    const response = await api.get<TypeResponse>(`/type/${type.toLowerCase()}`);
+    
+    return response.data.pokemon.map(pokemon => {
+      const id = parseInt(pokemon.pokemon.url.split('/').slice(-2, -1)[0]);
+      return {
+        id,
+        name: pokemon.pokemon.name,
+      };
+    });
+  } catch (error) {
+    console.error('Error fetching Pokémon by type:', error);
+    
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      throw new Error(`Type "${type}" not found`);
+    }
+    
+    throw new Error('Failed to load Pokémon by type. Please try again.');
   }
 };
 
