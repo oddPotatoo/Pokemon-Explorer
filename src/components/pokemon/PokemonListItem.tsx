@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useFavorites } from '../../stores/favorites';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { StarIcon as StarIconOutline } from '@heroicons/react/24/outline';
+import { useSearchParamsState } from '../../hooks/useSearchParams';
 
 interface PokemonListItemProps {
   pokemon: {
@@ -14,6 +15,18 @@ interface PokemonListItemProps {
 
 const PokemonListItem = ({ pokemon }: PokemonListItemProps) => {
   const { favorites, toggleFavorite } = useFavorites();
+  const { page, search, typeFilter, sort, favoritesOnly } = useSearchParamsState();
+
+  // Build the URL with current search parameters
+  const searchParams = new URLSearchParams();
+  
+  if (page && page > 1) searchParams.set('page', page.toString());
+  if (search) searchParams.set('q', search);
+  if (typeFilter) searchParams.set('type', typeFilter);
+  if (sort && sort !== 'id-asc') searchParams.set('sort', sort);
+  if (favoritesOnly) searchParams.set('favorites', 'true');
+
+  const pokemonUrl = `/pokemon/${pokemon.id}?${searchParams.toString()}`;
 
   return (
     <div className="p-2">
@@ -34,7 +47,7 @@ const PokemonListItem = ({ pokemon }: PokemonListItemProps) => {
               <StarIconOutline className="h-5 w-5 text-gray-400" />
             )}
           </button>
-          <Link to={`/pokemon/${pokemon.id}`} className="block">
+          <Link to={pokemonUrl} className="block">
             <div className="h-32 flex items-center justify-center bg-gray-100 dark:bg-gray-700">
               <img
                 src={pokemon.sprite}
@@ -44,7 +57,7 @@ const PokemonListItem = ({ pokemon }: PokemonListItemProps) => {
               />
             </div>
             <div className="p-4">
-              <h3 className="text-lg font-semibold text-gray-80 dark:text-white capitalize">
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white capitalize">
                 {pokemon.name}
               </h3>
               {/* Types will be empty in list view due to API limitations */}

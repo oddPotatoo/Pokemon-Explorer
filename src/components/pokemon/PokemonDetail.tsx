@@ -12,9 +12,20 @@ const PokemonDetail = () => {
   const { favorites, toggleFavorite } = useFavorites();
   const location = useLocation();
   
-  // Get the page from URL search params or default to 1
+  // Get all search params from the current URL to preserve state
   const searchParams = new URLSearchParams(location.search);
-  const page = searchParams.get('page') || '1';
+  
+  // Preserve all existing search parameters
+  const backToSearchParams = new URLSearchParams();
+  
+  // Copy all existing search parameters except the 'id' if it exists
+  searchParams.forEach((value, key) => {
+    if (key !== 'id') {
+      backToSearchParams.set(key, value);
+    }
+  });
+
+  const backToUrl = `/?${backToSearchParams.toString()}`;
 
   const { data: pokemon, isLoading, error } = useQuery({
     queryKey: ['pokemon', id],
@@ -77,7 +88,7 @@ const PokemonDetail = () => {
               {pokemon!.types.map((type) => (
                 <span
                   key={type.type.name}
-                  className={`px-3 py-1 rounded-full bg-${type.type.name}-100 dark:bg-${type.type.name}-800 text-${type.type.name}-800 dark:text-${type.type.name}-100 capitalize`}
+                  className={`px-3 py-1 rounded-full text-sm font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white capitalize`}
                 >
                   {type.type.name}
                 </span>
@@ -127,8 +138,8 @@ const PokemonDetail = () => {
       </div>
       <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700">
         <Link
-          to={`/?page=${page}`}
-          className="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+          to={backToUrl}
+          className="inline-flex items-center px-4 py-2 bg-blue-500 dark:bg-blue-700 text-white dark:text-white rounded disabled:opacity-50 hover:bg-blue-300 dark:hover:bg-blue-300 transition-colors"
         >
           Back to List
         </Link>
