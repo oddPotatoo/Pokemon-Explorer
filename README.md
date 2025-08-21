@@ -1,46 +1,114 @@
-# Getting Started with Create React App
+# Pokémon Explorer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern React application for exploring Pokémon with advanced filtering, search, and dark mode support.
 
-## Available Scripts
+![Pokémon Explorer](https://img.shields.io/badge/React-18.2.0-blue) ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue) ![Tailwind](https://img.shields.io/badge/Tailwind-3.3-38bdf8)
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- 🎨 **Dark/Light Mode** - Theme switching with persistent preferences
+- ⭐ **Favorites System** - Save your favorite Pokémon
+- 🔍 **Advanced Search** - Real-time search with debouncing
+- 🎯 **Smart Filtering** - Filter by type, favorites, and sort options
+- 📱 **Responsive Design** - Works on desktop, tablet, and mobile
+- 🎪 **Enhanced Pagination** - Smart pagination with page numbers and navigation
+- 🖼️ **Theme Backgrounds** - Different backgrounds for light/dark modes
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Quick Start
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Prerequisites
 
-### `npm test`
+- Node.js 16+ 
+- npm or yarn
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Installation
 
-### `npm run build`
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/oddPotatoo/Pokemon-Explorer.git
+   cd Pokemon-Explorer
+2. **Install Dependencies**
+   ```bash
+   npm install
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# Architecture & Trade-offs
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Tech Stack Choices
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **React 18 + TypeScript**: Type safety and modern React features
+- **React Router v6**: Client-side routing with search state preservation
+- **TanStack Query v4**: Server state management with caching and background updates
+- **Zustand**: Lightweight state management for UI state (theme, favorites)
+- **Tailwind CSS**: Utility-first CSS for rapid UI development
+- **Heroicons**: Consistent iconography
 
-### `npm run eject`
+## Architecture Decisions
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### State Management Strategy
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **Zustand for UI state**: Simple and scalable for theme and favorites
+- **TanStack Query for server state**: Automatic caching, background updates, and error handling
+- **URL Search Params for filter state**: Shareable URLs and browser history support
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Component Structure
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- **Smart Pages**: Handle data fetching and state management
+- **Dumb Components**: Focus on presentation and user interaction
+- **Custom Hooks**: Reusable logic for search, pagination, and filters
 
-## Learn More
+### Performance Optimizations
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- **Debounced Search**: 400ms delay to prevent excessive API calls
+- **Lazy Loading Images**: Better loading performance for Pokémon sprites
+- **Virtualized Lists**: Efficient rendering for large datasets
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Trade-offs
+
+### API Limitations
+
+- Using PokeAPI v2 which has rate limiting
+- No bulk details endpoint, requiring individual fetches for details
+- Compromised on displaying types in list view due to API structure
+
+### Bundle Size
+
+- Added Tailwind CSS (~70KB gzipped) for development velocity
+- Additional icons library for consistent UI
+
+### State Complexity
+
+- URL search params for filters adds complexity but enables shareable state
+- Multiple state sources (URL, Zustand, TanStack Query) requires careful synchronization
+
+---
+
+# If I Had More Time: Pokémon Abilities Section
+
+## Next Priority: Abilities Detail View
+
+I would implement a comprehensive abilities section with:
+
+### Ability Details Page
+
+- Detailed description and effects
+- Pokémon that can have this ability
+- Generation introduced and hidden ability status
+
+### Enhanced Ability Display
+
+- Interactive tooltips on hover
+- Color-coded by effect type (positive/negative/neutral)
+- Comparison between similar abilities
+
+### Ability-based Filtering
+
+- Filter Pokémon by abilities they can have
+- Search for Pokémon with specific ability combinations
+- Filter by hidden abilities only
+
+## Why Abilities Next?
+
+- **Strategic Value**: Abilities are crucial for competitive Pokémon battling
+- **User Engagement**: Deepens the exploration aspect of the app
+- **Technical Challenge**: Requires complex data relationships and filtering
+- **Completeness**: Makes the app a more comprehensive Pokémon resource
