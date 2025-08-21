@@ -14,7 +14,7 @@ A modern React application for exploring Pokémon with advanced filtering, searc
 - 🎪 **Enhanced Pagination** - Smart pagination with page numbers and navigation
 - 🖼️ **Theme Backgrounds** - Different backgrounds for light/dark modes
 
-## 🖼️ Entrance UI
+## 🖼️ UI
   <div align="center">
     <img src="public/samplelight.png" alt="UI Preview" width="600"/>
     <img src="public/sampledark.png" alt="UI Preview" width="600"/>
