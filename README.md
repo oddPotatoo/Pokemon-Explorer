@@ -27,3 +27,6 @@ A modern React application for exploring Pokémon with advanced filtering, searc
    ```bash
    git clone https://github.com/oddPotatoo/Pokemon-Explorer.git
    cd Pokemon-Explorer
+2. **Install Dependencies**
+   ```bash
+   npm install
